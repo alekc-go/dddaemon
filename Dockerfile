@@ -14,8 +14,7 @@ COPY . .
 
 # Build
 WORKDIR cmd/dddaemon/
-RUN ls -la
-RUN go build dddaemon.go
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -a -o dddaemon dddaemon.go
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
@@ -24,4 +23,4 @@ WORKDIR /
 COPY --from=builder /workspace/cmd/dddaemon/dddaemon .
 USER nonroot:nonroot
 
-ENTRYPOINT ["/dddaemon.go"]
+CMD ["/dddaemon"]
